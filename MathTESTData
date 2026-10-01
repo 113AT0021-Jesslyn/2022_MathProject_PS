@@ -1,0 +1,191 @@
+#Programmer : Jesslyn Boediono Goenawan
+#November 2022
+#This mini program will make random math questions for the students to answer
+
+#EndProgram variables
+endProgram = 'no'
+
+#While loop for the endProgram
+while endProgram == 'no':
+    #Importing the random and operator functions
+    import random 
+    import operator
+
+    #Setting the variables
+    num1 = 0
+    num2 = 0
+    user = 0
+    correct = int(0)
+    
+    #Definition groups
+    #Write program to check student's name existence
+    def register ():
+        nameList = ['James', 'Rooster', 'Angel']
+        studentName = str(input("Enter the student's name : "))
+
+        #Check if student's name exist or not in the list
+        if studentName in nameList:
+            print()
+        else:
+            print ("The student name is not found")
+            quit()
+    
+        #Check the gender existence from the student's input
+        genList = ['Female', 'Male']
+        gender = str(input("Enter the student's gender (Male or Female) : "))
+        if gender in genList:
+            print()
+        else:
+            print("The gender is invalid")
+            quit()
+    
+        #Check the student's class (Primary 1-6)
+        numClass = int(input("Enter the student's class : "))
+        if numClass <= 6:
+            print ()
+        else:
+            print("The class number is not found")
+            quit()
+
+ 
+    def logo():    #Def logo to make the headings for the start of the program
+        heading = ("Welcome to CucKoo Learn!")
+        print("=" * len(heading))   #Program design
+        print(heading)
+        print("=" * len(heading))
+
+    def display1():
+            print("There will be 7 math questions that you need to answer. ")
+ 
+    def display_menu():   #display for program design
+        print("=" * 40)
+        print("Please choose one option below")
+        print("=" * 40)
+
+    def math_menu():     #making list for the math equation choices
+        math_list = ["1. Addition", "2. Substraction", "3. Multiplication", "4. Division", "5. Random Equation"]
+        print(math_list[0])
+        print(math_list[1])
+        print(math_list[2])
+        print(math_list[3])
+        print(math_list[4])
+
+    def display():    #Program design
+        print("=" * 20)
+
+    def user():    #To fixed the number of choice the user input
+        choice = int(input("Please choose one of the math equation : "))
+        while choice > 5 or choice <= 0 :
+            print("Invalid input. Please try again")
+            choice = int(input("Please choose one of the math equation : "))
+        else: 
+            return choice
+
+    #Start of the quiz
+    def solutions (userAns, ans, calculate):   #To check the user's answer
+        if userAns == ans:
+            calculate += 1
+            print("Your answer is correct!")
+            return calculate
+        else:
+            print("Incorrect.")
+            return calculate
+
+    def randSolution ():   #For the math's answer solution
+        ans = (maths)
+        guess = float(input())
+        return guess == ans
+
+    def getAns (eq):   #For the user's answer input
+        print(eq, end= "")
+        result = float(input(" = "))
+        return result
+
+    def maths (index, calculate): #The math calculation for the questions
+        num1 = random.randint(0,20) #random numbers generator
+        num2 = random.randint(1,20)
+        if index == 1:
+            eq = "What is " + str(num1) + " + " + str(num2)
+            ans = num1 + num2
+            userAns = getAns(eq)
+            calculate = solutions(userAns, ans, calculate)
+            return calculate
+        elif index == 2:
+            eq = "What is " + str(num1) + " - " + str(num2)
+            ans = num1 - num2
+            userAns = getAns(eq)
+            calculate = solutions(userAns, ans, calculate)
+            return calculate
+        elif index == 3:
+            eq = "What is " +str(num1) + " * " + str(num2)
+            ans = num1 * num2
+            userAns = getAns(eq)
+            calculate = solutions(userAns, ans, calculate)
+            return calculate
+        elif index == 4:
+            eq = "What is " + str(num1) + " / " + str(num2)
+            ans = num1 / num2
+            userAns = getAns(eq)
+            calculate = solutions(userAns, ans, calculate)
+            return calculate
+        else:
+            operators = {
+                '+': operator.add,
+                '-': operator.sub,
+                '*': operator.mul,
+                '/': operator.truediv,    #operators generator
+            }
+            randOp = random.choice(list(operators.keys()))   #Program for the random equation
+            eq = (f"What is " + str(num1) + randOp + str(num2))
+            ans = operators.get(randOp)(num1,num2)
+            userAns = getAns(eq)
+            calculate = solutions(userAns, ans, calculate)
+            return calculate
+
+    def resultDisplay(total, correct): #To find the score that the user got
+        if total > 0:
+            result = correct / total
+            score = round((result * 100), 2)
+        if total == 0:
+            score = 0
+        print("You answered", total, "questions with", correct, "correct.")
+        print("Your score is ", score, "%.", sep = "")
+
+    def numQuestions():   #To make a fixed total of questions
+        total = 0
+        correct = 0
+        while total <= 6:
+            op = user()
+            total += 1
+            correct = maths(op, correct)
+            if total == 7:
+                display()
+                print("End of the quiz. ")
+                display()
+                resultDisplay(total, correct)
+                #Program to ask the user whether to end the quiz or not
+                endProgram = str(input('Do you want to end the quiz? (Enter no or yes): '))
+                if endProgram == 'no':
+                    main()
+                else:
+                    quit()
+        
+    def main():   #The whole structure of the Program
+        logo ()
+        register()
+        display_menu()
+        math_menu()
+        display()
+        display1()
+        numQuestions()
+        total = 0
+        correct = 0
+        op = user()
+        while op < 5:
+            total = total + 1
+            correct = maths (op, correct)
+        
+    main()
+
+
+    
