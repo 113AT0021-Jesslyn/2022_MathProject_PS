@@ -1,0 +1,679 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+
+static class managementSystems
+{ /*private ArrayList<adminAcc> adminAccList;
+  private ArrayList<bookRental> rentalList;
+  private ArrayList<userAcc> uAccounts;
+  private ArrayList<Book> bookList;*/
+}
+
+static class Book
+{ private int BID; // data hiding (encapsulation)
+  private String bName; //Fields
+  private String bDesc;
+  private String bGenre;
+  private double rPrice; //double = a primitive data type
+
+  public Book (int BID, String bName, String bDesc, String bGenre, double brentalPr) //The constructor
+  { this.BID = BID; //Arguments
+    this.bName = bName;
+    this.bDesc = bDesc;
+    this.bGenre = bGenre;
+    this.rPrice = brentalPr;}
+
+  public String getbDesc () //getter = read/retrieve data
+  {return bDesc;}
+
+  public void setbDesc (String bDesc)
+  {this.bDesc = bDesc;}
+
+  public void setBID (int BID) //setter = setting the variable for getter
+  {this.BID = BID;}
+
+  public int getBID ()
+  {return BID;}
+
+  public void setrPrice (double brentalPr)
+  {this.rPrice = brentalPr;}
+
+  public double getbrentalPr()
+  {return rPrice;}
+
+  public String getbName()
+  {return bName;}
+
+  public void setbName (String bName)
+  {this.bName = bName;}
+
+  public void setbGenre (String bGenre)
+  {this.bGenre = bGenre;}
+
+  public String getbGenre ()
+  {return bGenre;}
+};
+
+static class userAcc
+{ private int userID;
+  private String userFirstName;
+  private String userLastName;
+  private String CreatedDate;
+  private ArrayList<String> GenrePref;
+
+  userAcc (int UID, String uFN, String uLN, String cDate)
+  { this.uID = UID;
+    this.uFN = uFN;
+    this.uLN = uLN;
+    this.cDate = cDate;
+    this.GenrePref = new ArrayList<>();}
+
+    public void setuserFirstName (String uFN) //setter = setting the variable for getter
+    {this.userFirstName = uFN; }
+
+    public String getuserFirstName () //getter = read/retrieve data
+    {return userFirstName;}
+
+    public int getuserID ()
+    {return userID; }
+
+    public void setuserID (int UID)
+    {this.userID = UID;}
+
+    public String getuserLastName ()
+    {return userLastName;}
+
+    public void setuserLastName (String uLN)
+    {this.userLastName = uLN;}
+
+    public String getCreatedDate ()
+    {return CreatedDate;}
+
+    public void setCreatedDate (String cDate)
+    {this.CreatedDate = cDate;}
+
+    public void addbGenre(String bGenre)
+    {this.GenrePref.add(bGenre);}
+
+    public void removebGenre(String bGenre)
+    {this.GenrePref.remove(bGenre);}
+};
+
+static class bookRental
+{ private int rentalID;
+  private String rentalDate;
+  private userAcc rUserAcc;
+  private LinkedList<Book> rbookList;
+
+  public bookRental (int RID, String rDate, userAcc rUserAcc)
+  { this.rentalID = RID;
+    this.rentalDate = rDate;
+    this.rUserAcc = rUserAcc;
+    this.rbookList = new ArrayList<>();}
+
+  public void setrentalDate (String rDate) //setter = setting the variable for getter
+  {this.rentalDate = rDate; }
+
+  public String getrentalDate() //getter = read/retrieve data
+  {return rentalDate;}
+
+  public int getrentalID ()
+  {return rentalID; }
+
+  public void setrentalID (int RID)
+  {this.rentalID = RID;}
+
+  public void setrUserAcc (userAcc rUserAcc)
+  {this.rUserAcc = rUserAcc;}
+
+  public userAcc getrUserAcc ()
+  {return rUserAcc;}
+
+  public void addBook1(Book Book1)
+  {this.rbookList.add(Book1);}
+
+  public void removeBook1(Book Book1)
+  {this.rbookList.remove(Book1);}
+
+  public double totalRprice()
+  {double total = 0.0;
+    for (Book Book1 : rbookList)
+    {total += Book1.getbrentalPr();}
+    return total;}
+};
+
+static class adminAcc
+{   private int adminID;
+    private String aName;
+    private String aUsername;
+    private String aPassw;
+      
+      public adminAcc (int aID, String aN, String aUsn, String aPw)
+      { this.adminID = aID;
+        this.aName = aN;
+        this.aUsername = aUsn;
+        this.aPassw= aPw;}
+  
+      public int getadminID ()
+      {return adminID;}
+  
+      public void setadminID (int aID)
+      {this.adminID = aID;}
+  
+      public String getaName ()
+      {return aName;}
+  
+      public void setaName (String aN)
+      {this.aName = aN;}
+  
+      public String getaUsername ()
+      {return aUsername;}
+  
+      public void setaUsername (String aUsn)
+      {this.aUsername = aUsn;}
+  
+      public String getaPassw ()
+      {return aPassw;}
+  
+      public void setaPassw (String aPw)
+      {this.aPassw = aPw;}
+
+//To check admin account existance
+static boolean adSingIn(boolean option)
+{   LinkedList<adminAcc> adminAccList = new ArrayList<>();
+    adminAccList.add(new adminAcc(10245280, "Jesslyn", "Jess", "54321"));
+    
+    //Signed In through admin account
+    Scanner userInput = new Scanner(System.in);
+    for (adminAcc newadminAccs : adminAccList)
+        {
+          if ((aID = newadminAccs.getaID()) || ((aN = newadminAccs.getaN)))
+          {
+            System.out.println("Successfully signed in");
+            return true;
+          }
+          System.out.println("Incorrect admin ID or name.");
+          return false;
+        }
+    System.out.println("Enter your admin ID");
+    int aID = userInput.nextInt();
+    userInput.nexLine();
+
+    System.out.println("Enter you admin name");
+    String aName = userInput.nextLine();
+    userInput.nextLine();
+
+    System.out.println("Enter you username");
+    String aUsn = userInput.nextLine();
+    userInput.nextLine();
+
+    System.out.println("Enter your password");
+    String aPw = userInput.nextLine();
+    userInput.nextLine();
+    }
+
+    // to show the individual matched book for the users.
+public static void showMatchBook(userAcc theUser, LinkedList<Book> bookList)
+{
+    System.out.println("Individual matched book (Genre preference)" 
+    + theUser.getuserFirstName() + "are/is");
+    for (Book books : bookList)
+    {
+        if(GenrePref.contain(books.getbGenre()))
+        {
+            System.out.println(books.getbName() + "and" + books.getbGenre());
+        }
+    }
+
+}
+
+
+// all the main codes (Menu options, Arraylists)
+public class Main
+{
+    public void main(String[] args)
+    {
+        LinkedList<adminAcc> adminAccList = new ArrayList<>();
+        adminAccList.add(new adminAcc(10245280, "Jesslyn", "Jess", "54321"));
+        
+        LinkedList<userAcc> uAccounts = new ArrayList<>();
+        userAcc firstUser = new userAcc(12468, "Tiffany", "Angelynn", "07/02/2023");
+        userAcc secondUser = new userAcc(77889, "Maylani", "Patricia", "10/02/2023");
+        firstUser.addbGenre("Sci-fi");
+        secondUser.addbGenre("Action");
+        uAccounts.add(firstUser);
+        uAccounts.add(secondUser);
+        
+        LinkedList<Book> bookList = new ArrayList();
+        bookList.add(new Book(13232, "Blue", "A colour of feelings", "Romance", 20.99));
+        bookList.add(new Book(15454, "Bumi", "Where the earth is destroyed by humans", "Fantasy", 18.99));
+
+        LinkedList<bookRental> rentalList = new ArrayList<>();
+        rental_one.add(new bookRental(2468, "07/02/2023", firstUser));
+        rental_one.add(rentalList);
+        rental_one.addBook(bookList.get(0));
+
+        rental_two.add(new bookRental(3579, "10/02/2023", secondUser));
+        rental_two.add(rentalList);
+        rental_two.addBook(bookList.get(1));
+        
+        bookRental rental3 = new bookRental(3333, "03/01/2023", firstUser);
+        rental1.addBook(bookList.get(1));
+        rentals.add(rental3);
+
+        Scanner userInput = new Scanner(System.in);
+        boolean SignInAccess = false;
+        userAcc TopUser = null;
+        boolean option = false;
+        int maxBookRental = 0;
+        boolean quit = false;
+
+        while (quit = false)
+        { while (SignInAccess = false)
+        {
+          int Op = userInput.nextInt();
+
+          System.out.println("=============== Welcome To Book Keep Rental Management ===============");
+          System.out.println("============= Made For The National Library of Singapore =============");
+          System.out.println("===================== Program Done By : Jesslyn B ====================");
+          System.out.println("");
+          System.out.println("Please Sign in or exit the program");
+          System.out.println("1. Sign in using admin account");
+          System.out.println("2. Exit the program");
+
+          switch (Op)
+          {
+            case 1:
+              SignInAccess = adSignIn(option);
+              break;
+            case 2:
+              quit = true;
+              System.exit(0);
+              break;
+            default:
+              System.out.println("Wrong input, please re-enter your choice");
+          }
+
+        if (SignInAccess != false)
+          {
+            int userChoice = userInput.nextInt();
+
+            System.out.println("");
+            System.out.println("********************************************");
+            System.out.println(" ========= Menu Options for Admin =========");
+            System.out.println("********************************************");
+            System.out.println("1. Admin account options");
+            System.out.println("2. Book options");
+            System.out.println("3. User account options");
+            System.out.println("4. Show Rental records list");
+            System.out.println("5. Show top user(rented the most books)");
+            System.out.println("6. Show individual user matched books(Genre Preferences)");
+            System.out.println("7. Exit");
+
+
+          if (userChoice = 1)
+          {
+            int userChoice1 = userInput.nextInt();
+
+            System.out.println("Admin account options:");
+            System.out.println("1. Add an admin account");
+            System.out.println("2. Delete an admin account");
+            System.out.println("3. Show admin account list");
+            System.out.println("4. Go back to menu options");
+
+            if (userChoice1 = 1)
+            {
+              System.out.println("Enter the admin ID you want to add");
+              int aID = userInput.nextInt();
+              userInput.nextLine();
+
+              System.out.println("Enter the admin name : ");
+              String aN = userInput.nextString();
+              userInput.nextLine();
+
+              System.out.println("Enter the admin username : ");
+              String aUsn = userInput.nextString();
+              userInput.nextLine();
+
+              System.out.println("Enter the admin password : ");
+              String aPw = userInput.nextString();
+              userInput.nextLine();
+
+              adminAcc adminAcc1 = new adminAcc(aID, aN, aUsn, aPw);
+              adminAccList.add(adminAcc1);
+
+              System.out.println("Your admin account has been added to the list!");
+              
+              break;
+            }
+
+            else if (userChoice1 = 2)
+            {
+                System.out.println("Enter the admin ID you want to add");
+                int aIDremove = userInput.nextInt();
+                userInput.nextLine();
+
+                System.out.println("Enter the admin name : ");
+                String aN = userInput.nextString();
+                userInput.nextLine(); 
+
+                boolean foundAdmin = false;
+                for (int i=0; i<adminAccList.size(); i++)
+                {
+                  if (adminAccList.get(i).getaID() == aIDremove)
+                  { adminAccList.remove(i);
+                    foundAdmin = true;
+                  }
+                }
+                System.out.println("Admin account has been removed from the list.");
+              
+                break;
+            }
+
+            else if (userChoice1 = 3)
+            {
+                for (adminAcc showAdList : adminAccList)
+                {
+                    System.out.println("Admin ID\t\t: " + showAdList.getaID());
+                    System.out.println("Admin Name\t\t: " + showAdList.getaN());
+                    System.out.println("Username\t\t: " + showAdList.getaUsn());
+                    System.out.println("Password\t\t: " + showAdList.getaPw());
+                break;
+                }
+            }
+            else if (userChoice1 = 4)
+            {
+                break;
+            }
+            break;
+          }
+        else if (userChoice = 2)
+        {
+            int userChoice2 = userInput.nextLine();
+
+            System.out.println("Books settings");
+            System.out.println("1. Add book");
+            System.out.println("2. Remove book");
+            System.out.println("3. Show book list");
+            System.out.println("4. Show most expensive book rental");
+            System.out.println("5. Show cheapest book rental");
+            System.out.println("6. Go back to menu options");
+
+            if (userChoice2 = 1)
+            {
+              System.out.println("Enter the book ID you want to add");
+              int BID = userInput.nextInt();
+              userInput.nextLine();
+
+              System.out.println("Enter the book name : ");
+              String bName = userInput.nextString();
+              userInput.nextLine();
+
+              System.out.println("Enter the book description : ");
+              String bDesc = userInput.nextString();
+              userInput.nextLine();
+
+              System.out.println("Enter the book genre : ");
+              String bGenre = userInput.nextString();
+              userInput.nextLine();
+
+              System.out.println("Enter the book rental price : ");
+              double brentalPr = userInput.nextDouble();
+              userInput.nextLine();
+
+              Book book1 = new Book(BID, bName, bDesc, bGenre, brentalPr);
+              bookList.add(book1);
+
+              System.out.println("Your new book has been added to the list!");
+            
+              break;
+            }
+            
+            else if (userChoice2 = 2)
+            {
+              System.out.println("Enter the book ID you want to remove : ");
+              int BIDremove = userInput.nextInt();
+              userInput.nextLine();
+              boolean found = false;
+
+              System.out.println("Enter the book name : ");
+              String bName = userInput.nextString();
+              userInput.nextLine();
+
+              boolean thebook = false;
+              for (int i=0; i<bookList.size(); i++)
+              {
+                if (bookList.get(i).getBID() == BIDremove)
+                { bookList.remove(i);
+                  thebook = true;
+                }
+              }
+              System.out.println("Book has been removed from the list.");
+              
+              break;
+            }
+
+            else if (userChoice2 = 3)
+            {
+                for (Book showbList : bookList)
+                {
+                    System.out.println("Book ID\t\t: " + showbList.getBID());
+                    System.out.println("Book Name\t\t: " + showbList.getbName());
+                    System.out.println("Book description\t\t: " + showbList.getbDesc());
+                    System.out.println("Genre\t\t: " + showbList.getbGenre());
+                    System.out.println("Rental Price($)\t: " + showbList.getbrentalPr());
+                }
+                break;
+            }
+        
+            else if (userChoice2 = 4)
+            {
+                double brentalMax = Double.MIN_VALUE;
+                int index = -1;
+                for (int i=0; i<bookList.size();)
+                {
+                    if (bookList.get(i).getbrentalPr() > brentalMax)
+                    {
+                        brentalMax = bookList.get(i).getbrentalPr();
+                        index += 1;
+                    }
+                }
+                
+                if (index != -1)
+                {
+                    System.out.println("The most expensive book rental is " + bookList.get(index).getbName()
+                    + "with " + brentalMax + "$ rental price");
+                }
+                
+            break;
+            }
+
+            else if (userChoice2 = 5)
+            {
+                double brentalMin = Double.MAX_VALUE;
+                int index1 = -1;
+                for (int i=0; i<bookList.size();)
+                {
+                    if (bookList.get(i).getbrentalPr() > brentalMin)
+                    {
+                        brentalMin = bookList.get(i).getbrentalPr();
+                        index1 += 1;
+                    }
+                }
+                
+                if (index1 != -1)
+                {
+                    System.out.println("The most expensive book rental is " + bookList.get(index1).getbName()
+                    + "with " + brentalMin + "$ rental price");
+                }
+                break;
+            }
+        
+            else if (userChoice2 = 6)
+            {
+                break;
+            }
+            break;
+        }
+
+        else if (userChoice = 3)
+            {
+                int userChoice3 = userInput.nextInt();
+
+                System.out.println("Admin account options:");
+                System.out.println("1. Add an user account");
+                System.out.println("2. Delete an user account");
+                System.out.println("3. Show user account list");
+                System.out.println("4. Go back to menu options");
+
+                if (userChoice3 = 1)
+                { System.out.println("Enter the user ID you want to add");
+                  int UID = userInput.nextInt();
+                  userInput.nextLine();
+
+                  System.out.println("Enter the user first name : ");
+                  String uFN = userInput.nextString();
+                  userInput.nextLine();
+
+                  System.out.println("Enter the user last name : ");
+                  String uLN = userInput.nextString();
+                  userInput.nextLine();
+ 
+                  System.out.println("Enter the account created date : ");
+                  String cDate = userInput.nextString();
+                  userInput.nextLine();
+
+                  System.out.println("Enter the add-on genre preference");
+                  newuserAcc.addbGenre(userInput.nextLine());
+
+                  userAcc newuserAcc = new userAcc(UID, uFN, uLN, cDate);
+                  userAccList.add(newuserAcc);
+ 
+                System.out.println("Your user account has been added to the list!");
+            
+            break;
+    }
+
+                else if (userChoice3 = 2)
+                {System.out.println("Enter the user ID you want to remove : ");
+                int UIDremove = userInput.nextInt();
+                userInput.nextLine();
+  
+                System.out.println("Enter the user first name : ");
+                String uFN = userInput.nextString();
+                userInput.nextLine();
+
+                System.out.println("Enter the user last name : ");
+                String uLN = userInput.nextString();
+                userInput.nextLine();
+  
+                boolean foundUser = false;
+                for (int i=0; i<userAccList.size(); i++)
+                {
+                  if (userAccList.get(i).getUID() == UIDremove)
+                  { userAccList.remove(i);
+                    foundUser = true;
+                  }
+                }
+                System.out.println("User account has been removed from the list.");
+                
+                break;
+            }
+                else if (userChoice3 = 3)
+                {
+                    for (userAcc showUserList : uAccounts)
+                    {
+                    System.out.println("User ID\t\t: " + showUserList.getUID());
+                    System.out.println("User first Name\t\t: " + showUserList.getuFN());
+                    System.out.println("User last name\t\t: " + showUserList.getuLN());
+                    System.out.println("Created date\t\t: " + showUserList.getcDate());
+                    System.out.println("Genre Preference\t: " + showUserList.getGenrePref());
+                    }
+                break;
+                }
+        
+                else if (userChoice3 = 4)
+                {
+                   break;
+                }
+                break;
+        }
+
+        else if (userChoice = 4)
+        {
+            for (bookRental showRentalList : rentalList)
+                    {
+                    System.out.println("Rental ID\t\t: " + showRentalList.getRID());
+                    System.out.println("Rental date\t\t: " + showRentalList.getrDate());
+                    System.out.println("Rental user account\t\t: " + showRentalList.getrUserAcc());
+                    System.out.println("Created date\t\t: " + showRentalList.get());
+                    System.out.println("The total rental price is\t: " + showRentalList.totalRprice());
+                    }
+                break;
+        }
+
+        else if (userChoice = 5)
+        {
+            for (Map.Entry < userAcc, Integer > Entry : rentalTotal.entrySet())
+            {
+                if (entry.getNum() > maxBookRental)
+                {
+                    TopUser = entry.getKey();
+                    maxBookRental = entry.getNum();
+                }
+            }
+
+            HashMap <userAcc, Integer> rentalTotal = new HashSet<>();
+            for (bookRental newrentals : rentalList)
+            {
+                userAcc theUser = newrentals.getRentUserAcc();
+                switch (rentalTotal.containsKey(user))
+                {
+                case 1:
+                    rentalTotal.put(theUser, rentalTotal.get(theUser) 
+                    + newrentals.getrentalList().size());
+                    break;
+
+                default:
+                    rentalTotal.put(theUser, newrentals.getrentalList().size());
+                }
+                  
+            }
+
+            System.out.println("The top user (most rented books) is : " + TopUser.getuFN() + " " + TopUser.getuLN() + "with" + maxBookRental
+            + "number of book rented");
+        }
+
+        else if (userChoice = 6)
+        {
+            for (userAcc newUser : userAccList)
+            {
+                matchedBooks(newUser, bookList);
+                System.out.println("");
+            }
+            break;
+        }
+
+        else if (userChoice = 7)
+        {
+            System.exit(0);
+            break;
+        }
+
+        else  
+        {
+            System.out.println("Wrong input.");
+        }
+        
+    }
+    
+
+        }
+        
+      }
+      
+    }
+}
+}
