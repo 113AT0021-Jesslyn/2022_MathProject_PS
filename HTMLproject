@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Interactive Web Portfolio</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"Segoe UI",sans-serif; background: linear-gradient(135deg,#1e1e2f,#111); color:black; overflow:hidden; }
+nav { position:fixed; top:0; width:100%; height:60px; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; gap:25px; z-index:10; }
+nav button { background:none; border:none; color:black; font-size:14px; cursor:pointer; padding:8px 14px; }
+nav button:hover { color:black; border-bottom:2px solid #00ffff; }
+section { position:absolute; top:0; left:0; width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding-top:60px; opacity:0; pointer-events:none; transition:opacity 0.6s ease; }
+section.active { opacity:1; pointer-events:auto; }
+.card { background: rgba(255,255,255,0.06); padding:40px; border-radius:20px; backdrop-filter: blur(10px); box-shadow: 0 0 40px rgba(0,0,0,0.5); max-width:900px; height:80%; display:flex; flex-direction:column; justify-content:center; }
+#home h1{ font-size:42px; } #home p{ margin-top:15px; font-size:18px; opacity:0.85; }
+
+/* ===== FLIP + SCROLL 3D ===== */
+.flip-scroll-container { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr auto; gap:20px; height:100%; }
+.flip-card-3d { width:100%; max-width:160px; aspect-ratio:4/5; margin:auto; perspective:1000px; cursor:pointer; }
+.flip-card-inner { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 1s ease-in-out; border-radius:15px; }
+.flip-card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px; border-radius:15px; color:white; overflow:hidden; }
+.flip-card-face img {
+  width:100%;
+  height:100%;
+  object-fit: cover; /* Keep aspect ratio, fill card, may crop edges */
+  border-radius:15px;
+}
+.back { transform:rotateY(180deg); }
+.left { transform:rotateY(90deg); }
+
+.scroll-box-3d { width:100%; height:100%; overflow-y:auto; border-radius:15px; background:rgba(255,255,255,0.1); transition:opacity 0.5s; }
+.scroll-box-3d img { width:100%; height:auto; display:none; margin-bottom:10px; }
+
+.desc-box-3d { background: rgba(255,255,255,0.08); padding:15px; border-radius:10px; font-size:16px; text-align:left; overflow-y:auto; max-height:150px; transition:opacity 0.5s; }
+
+/* ===== 3D CUBE ===== */
+.scene { width:200px; height:200px; perspective:800px; margin:0 auto; }
+.cube { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform 1s ease-in-out; }
+.cube-face { position:absolute; width:200px; height:200px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:black; border-radius:10px; overflow:hidden; }
+.cube-face img {
+  width:100%;
+  height:100%;
+  object-fit: cover; /* Fill cube face without stretching */
+  border-radius:10px;
+}
+.front-cube  { transform: rotateY(0deg) translateZ(100px); }
+.back-cube   { transform: rotateY(180deg) translateZ(100px); }
+.right-cube  { transform: rotateY(90deg) translateZ(100px); }
+.left-cube   { transform: rotateY(-90deg) translateZ(100px); }
+.top-cube    { transform: rotateX(90deg) translateZ(100px); }
+.bottom-cube { transform: rotateX(-90deg) translateZ(100px); }
+
+.controls button { margin:5px; padding:8px 14px; border-radius:6px; border:none; cursor:pointer; }
+
+/* ===== STATES ===== */
+.stateBox { width:200px; height:200px; border-radius:20px; }
+.state1 { background:#ff4b4b; }
+.state2 { background:#4bff4b; }
+.state3 { background:#4b4bff; }
+
+/* ===== CANVAS ===== */
+canvas { border-radius:10px; background:white; }
+
+/* ===== SVG ===== */
+svg { background:white; border-radius:10px; }
+
+
+/* ===== GALLERY PAGE ===== */
+.gallery-controls {
+  margin-bottom: 15px;
+}
+
+.gallery-controls button {
+  margin: 5px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.gallery-box {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 300px;
+  padding: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+
+.gallery-box img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <button onclick="go('home')">Home</button>
+  <button onclick="go('flip3d')">Flip & Scroll 3D</button>
+  <button onclick="go('column')">3D Cube</button>
+  <button onclick="go('state')">States</button>
+  <button onclick="go('canvas')">Canvas</button>
+  <button onclick="go('svg')">SVG</button>
+</nav>
+
+<section id="home" class="active">
+  <div class="card">
+    <h1>Museum of Classical Music</h1>
+    <p>Interactive Online Museum showcasing the history of the greatest Musicians of Classical Music.</p>
+  </div>
+</section>
+
+<!-- ===== FLIP + SCROLL 3D (3 flips) ===== -->
+<section id="flip3d">
+  <div class="card flip-scroll-container">
+    <div class="flip-card-3d" id="flipCard3D">
+      <div class="flip-card-inner" id="flipInner">
+        <div class="flip-card-face front"><img src="./flips/what_did_wolfgang_amadeus_mozart_compose.jpeg" alt="Front"></div>
+        <div class="flip-card-face back"><img src="./flips/ludwig-van-beethoven-composing-his-missa-solemnis-joseph-carl-stieler.jpg" alt="Back"></div>
+        <div class="flip-card-face left"><img src="./flips/2048px-frederic_chopin.jpg" alt="Left"></div>
+      </div>
+    </div>
+
+    <div class="scroll-box-3d" id="scrollBox3D">
+      <img src="./scrolls/a6e79f13c075d2d1b4af1a259c4c3a44.jpg" data-side="front">
+      <img src="./scrolls/Ecole-de-Verone-Portrait-de-Mozart-€-800000-1200000.webp" data-side="front">
+      <img src="./scrolls/wolfgang-amadeus-mozart-at-a-party-in-vienna-1750_ok.webp" data-side="front">
+      <img src="./scrolls/831500.jpeg" data-side="back">
+      <img src="./scrolls/1-monument-of-ludwig-van-beethoven-in-vienna-stefan-rotter.jpg" data-side="back">
+      <img src="./scrolls/beethoven-symphonien-frontispiece.jpg" data-side="back">
+      <img src="./scrolls/Piano-Chopin.jpg" data-side="left">
+      <img src="./scrolls/f6aa13b3-9ecc-4697-84ad-6fb69e39bf1a.jpg" data-side="left">
+      <img src="./scrolls/ddba86696aa7200cc65b284ea2435c08.jpg" data-side="left">
+    </div>
+
+    <div class="desc-box-3d" id="descBox3D">
+      <p>Description for Front side images.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3D CUBE WITH IMAGES ===== -->
+<section id="column">
+  <div class="card">
+    <h2>Interactive 3D Cube with Images</h2><br>
+    <div class="scene">
+      <div class="cube" id="cube">
+        <div class="cube-face front-cube"><img src="./3DBOX/2014-10-30_indezalen03.jpg" alt="Front"></div>
+        <div class="cube-face back-cube"><img src="./3DBOX/trumpets.jpg" alt="Back"></div>
+        <div class="cube-face right-cube"><img src="./3DBOX/Best-of-Musical-Instrument-Museum-Belgium-2.jpg" alt="Right"></div>
+        <div class="cube-face left-cube"><img src="./3DBOX/Musical-Instrument-Museum-Day-la-bao-tang-nhac-cu-toan-cau-duy-nhat-tren-the-gioi-1024x631.jpeg" alt="Left"></div>
+        <div class="cube-face top-cube"><img src="./3DBOX/t_DA_Impression_Musikinstrumente.jpg" alt="Top"></div>
+        <div class="cube-face bottom-cube"><img src="./3DBOX/musical-instruments-museum-mim-brussels-belgium-with-v0-irlac6r5zj6b1.jpeg" alt="Bottom"></div>
+      </div>
+    </div>
+    <br>
+    <div class="controls">
+      <button onclick="rotateCube('front')">Front</button>
+      <button onclick="rotateCube('back')">Back</button>
+      <button onclick="rotateCube('left')">Left</button>
+      <button onclick="rotateCube('right')">Right</button>
+      <button onclick="rotateCube('top')">Top</button>
+      <button onclick="rotateCube('bottom')">Bottom</button>
+    </div>
+  </div>
+</section>
+
+<section id="state">
+  <div class="card">
+    <h2>Switch States</h2><br>
+    <div id="stateBox" class="stateBox state1"></div><br>
+    <button onclick="switchState()">Switch State</button>
+  </div>
+</section>
+
+<section id="canvas">
+  <div class="card">
+    <h2>Canvas Drawing</h2><br>
+    <canvas id="c" width="300" height="200"></canvas><br><br>
+    <button onclick="draw()">Draw</button>
+  </div>
+</section>
+
+<section id="svg">
+  <div class="card">
+    <h2>SVG Graphic</h2><br>
+    <svg width="200" height="200">
+      <circle cx="100" cy="100" r="70" fill="gold"/>
+    </svg>
+  </div>
+
+  <section id="gallery">
+  <div class="card">
+    <h2>Dynamic Image Gallery</h2><br>
+
+    <div class="gallery-controls">
+      <button onclick="addImage('gallery1.jpg')">Add Image 1</button>
+      <button onclick="addImage('gallery2.jpg')">Add Image 2</button>
+      <button onclick="addImage('gallery3.jpg')">Add Image 3</button>
+      <button onclick="clearGallery()">Clear</button>
+    </div>
+
+    <div id="galleryBox" class="gallery-box"></div>
+  </div>
+</section>
+
+</section>
+
+<script>
+let currentSection=document.querySelector("section.active");
+function go(id){ 
+  if(currentSection.id===id)return; 
+  currentSection.classList.remove("active"); 
+  setTimeout(()=>{document.getElementById(id).classList.add("active"); currentSection=document.getElementById(id);},600); 
+}
+
+/* ===== FLIP + SCROLL 3D (3 flips, descriptions editable) ===== */
+const flipInner=document.getElementById("flipInner");
+const scrollBox3D=document.getElementById("scrollBox3D");
+const descBox3D=document.getElementById("descBox3D");
+let flipCount=0;
+const sides=[
+  {name:'front', rotate:'rotateY(0deg)', desc:"<b>Wolfgang Amadeus Mozart</b> (1756–1791) was an Austrian composer and musical prodigy, celebrated as one of the greatest figures in classical music."},
+  {name:'back', rotate:'rotateY(180deg)', desc:"<b>Ludwig van Beethoven</b> (1770–1827) was a German composer and pianist whose music bridged the Classical and Romantic eras."},
+  {name:'left', rotate:'rotateY(-90deg)', desc:"<b>Frédéric Chopin</b> (1810–1849) was a Polish composer and virtuoso pianist, renowned for his poetic and technically brilliant piano works."}
+];
+
+function updateFlipSide(){
+  const side=sides[flipCount];
+  flipInner.style.transform=side.rotate;
+  const images=scrollBox3D.querySelectorAll("img");
+  images.forEach(img=>img.style.display=(img.dataset.side===side.name)?"block":"none");
+  descBox3D.innerHTML=side.desc;
+}
+updateFlipSide();
+
+document.getElementById("flipCard3D").addEventListener("click", ()=>{
+  flipCount=(flipCount+1)%sides.length;
+  updateFlipSide();
+});
+
+/* ===== 3D CUBE ===== */
+function rotateCube(side){
+  const cube=document.getElementById("cube");
+  switch(side){
+    case"front": cube.style.transform="rotateX(0deg) rotateY(0deg)"; break;
+    case"back": cube.style.transform="rotateX(0deg) rotateY(180deg)"; break;
+    case"left": cube.style.transform="rotateX(0deg) rotateY(90deg)"; break;
+    case"right": cube.style.transform="rotateX(0deg) rotateY(-90deg)"; break;
+    case"top": cube.style.transform="rotateX(-90deg) rotateY(0deg)"; break;
+    case"bottom": cube.style.transform="rotateX(90deg) rotateY(0deg)"; break;
+  }
+}
+
+/* ===== STATES ===== */
+let state=1;
+function switchState(){state++; if(state>3) state=1; document.getElementById("stateBox").className="stateBox state"+state;}
+
+/* ===== CANVAS ===== */
+function draw(){let ctx=document.getElementById("c").getContext("2d"); ctx.clearRect(0,0,300,200); ctx.fillStyle="red"; ctx.fillRect(60,60,120,80);}
+
+
+
+</script>
+</body>
+</html>
